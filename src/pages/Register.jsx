@@ -33,10 +33,10 @@ const Register = () => {
 
     try {
       setLoading(true);
-      // Petición a Rails (los parámetros van bajo la llave "user")
-      const response = await api.post('/register', { user: formData });
+      // Petición a Rails (flat params)
+      const response = await api.post('/auth/register', formData);
       
-      localStorage.setItem('token', response.data.token);
+      // Guardamos solo los datos del usuario, el token va en cookie HttpOnly
       localStorage.setItem('user', JSON.stringify(response.data.user));
 
       navigate('/dashboard');

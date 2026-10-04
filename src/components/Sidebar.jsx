@@ -2,15 +2,21 @@ import React from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { LayoutDashboard, BookOpen, CheckSquare, User, LogOut } from 'lucide-react';
 import BrandName from './BrandName';
+import api from '../services/api';
 
 const Sidebar = ({ isOpen }) => {
   const navigate = useNavigate();
   const location = useLocation(); // Nos dice en qué página estamos para iluminar el botón correcto
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      await api.delete('/auth/logout');
+    } catch (error) {
+      console.error("Error al cerrar sesión", error);
+    } finally {
+      localStorage.removeItem('user');
+      navigate('/login');
+    }
   };
 
   // Función para saber si la ruta está activa
@@ -42,14 +48,14 @@ const Sidebar = ({ isOpen }) => {
             <BookOpen className="w-5 h-5 shrink-0" />
             {isOpen && <span>Materias</span>}
           </Link>
-          <button className={linkClass('/activities')}>
+          <Link to="/activities" className={linkClass('/activities')}>
             <CheckSquare className="w-5 h-5 shrink-0" />
             {isOpen && <span>Actividades</span>}
-          </button>
-          <button className={linkClass('/profile')}>
+          </Link>
+          <Link to="/profile" className={linkClass('/profile')}>
             <User className="w-5 h-5 shrink-0" />
             {isOpen && <span>Mi Perfil</span>}
-          </button>
+          </Link>
         </nav>
       </div>
 

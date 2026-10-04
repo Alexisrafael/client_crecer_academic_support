@@ -23,14 +23,13 @@ const Login = () => {
 
     try {
       setLoading(true);
-      // Petición a Rails (enviamos las credenciales directamente en la raíz)
-      const response = await api.post('/login', { email, password });
+      // Petición a Rails para iniciar sesión
+      const response = await api.post('/auth/login', { email, password });
       
-      // Guardamos el token y los datos del usuario en el navegador
-      localStorage.setItem('token', response.data.token);
+      // Guardamos solo los datos del usuario en el navegador (las cookies HttpOnly manejan los tokens automáticamente)
       localStorage.setItem('user', JSON.stringify(response.data.user));
 
-      // Redireccionamos al Dashboard (lo crearemos más adelante)
+      // Redireccionamos al Dashboard
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.error || 'Hubo un problema al iniciar sesión. ¡Inténtalo de nuevo!');
